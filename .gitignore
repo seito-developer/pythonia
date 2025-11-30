@@ -1,0 +1,50 @@
+# Unity自動生成のキャッシュ類
+[Ll]ibrary/
+[Tt]emp/
+[Bb]uild/
+[Bb]uilds/
+[Bb]uildProfile/
+[Ll]ogs/
+[Mm]emoryCaptures/
+
+# Unityエディタ設定の一部（ローカル環境依存）
+obj/
+[Bb]in/
+ExportedObj/
+.DS_Store
+.vscode/
+.idea/
+*.user
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.tmp
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Rider関連
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Unity CloudやCollaborate関連
+.vs/
+.gradle/
+
+# ビルド出力
+*.apk
+*.aab
+*.xcodeproj
+*.xcworkspace
+*.xcuserstate
+DerivedData/
+
+# その他
+sysinfo.txt
+*.ttf
