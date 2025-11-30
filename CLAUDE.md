@@ -1,0 +1,4 @@
+- ゲーム概要については @docs/overview.md を参照
+- ページ構成については @docs/page-map.md を参照
+- テーブル定義書については @docs/table-architecture.md を参照
+- 主要ゲーム画面設計書については @docs/ui.png を参照
