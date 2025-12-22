@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 
-public class Title : MonoBehaviour
+public class TitleManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -13,9 +12,11 @@ public class Title : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            SceneManager.LoadScene("HigherStages");
-        }
+
+    }
+
+    public void OnStartButtonClicked()
+    {
+        SceneManager.LoadScene("HigherStages"); // 遷移したいシーン名に変更
     }
 }
