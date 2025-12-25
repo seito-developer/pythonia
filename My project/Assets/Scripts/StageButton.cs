@@ -1,10 +1,10 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class StageButton : MonoBehaviour
 {
     public int stageNumber;
-    public Text stageText;
+    public TextMeshProUGUI stageText;
 
     // ボタンが押された時に実行する
     public void OnClickStage()

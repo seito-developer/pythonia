@@ -1,0 +1,8 @@
+﻿{
+  "stages": [
+    { "id": 1, "stageName": "初級：まずはここから" },
+    { "id": 2, "stageName": "中級：駆け引きの練習" },
+    { "id": 3, "stageName": "上級：CPUが本気を出す" },
+    { "id": 100, "stageName": "伝説の七並べ" }
+  ]
+}

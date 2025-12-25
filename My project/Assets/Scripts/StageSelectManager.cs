@@ -2,29 +2,45 @@ using UnityEngine;
 
 public class StageSelectManager : MonoBehaviour
 {
-    public GameObject stageButtonPrefab; // ボタンの設計図
-    public Transform container;          // ボタンを並べる場所
+    public GameObject stageButtonPrefab;
+    public Transform container;
 
     void Start()
     {
-        // 例えば、12ステージ分作成する場合
-        for (int i = 1; i <= 5; i++)
-        {
-            // 1. ボタンを生成してContainerの子要素にする
-            GameObject btnObj = Instantiate(stageButtonPrefab, container);
+        LoadStagesFromJson();
+    }
 
-            // 2. ボタンについているStageButtonスクリプトを取得
+    void LoadStagesFromJson()
+    {
+        // 1. ResourcesフォルダからJSONを読み込む
+        TextAsset jsonFile = Resources.Load<TextAsset>("StageData");
+
+        if (jsonFile == null)
+        {
+            Debug.LogError("JSONファイルが見つかりません！");
+            return;
+        }
+
+        // 2. JSONをクラスの形に変換
+        StageDataWrapper dataWrapper = JsonUtility.FromJson<StageDataWrapper>(jsonFile.text);
+
+        // 3. 読み込んだリストを元にボタンを生成
+        foreach (StageInfo info in dataWrapper.stages)
+        {
+            GameObject btnObj = Instantiate(stageButtonPrefab, container);
             StageButton script = btnObj.GetComponent<StageButton>();
 
             if (script != null)
             {
-                // 3. ステージ番号をセット（これでボタンごとに個性がつく）
-                script.stageNumber = i;
-
-                // 4. テキストも書き換える
+                script.stageNumber = info.id;
                 if (script.stageText != null)
                 {
-                    script.stageText.text = "ステージ " + i;
+                    script.stageText.text = info.stageName;
+                    Debug.Log("テキストをセットしました: " + info.stageName); // ログを出してみる
+                }
+                else
+                {
+                    Debug.LogError("stageTextがアサインされていません！");
                 }
             }
         }
