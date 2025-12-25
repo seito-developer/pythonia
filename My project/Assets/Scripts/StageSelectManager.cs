@@ -4,6 +4,7 @@ public class StageSelectManager : MonoBehaviour
 {
     public GameObject stageButtonPrefab;
     public Transform container;
+    public GameObject backButton;
     private StageDataWrapper dataWrapper;
 
     void Awake()
@@ -32,6 +33,9 @@ public class StageSelectManager : MonoBehaviour
     {
         ClearContainer();
 
+        // 戻るボタンを隠す
+        if (backButton != null) backButton.SetActive(false);
+
         foreach (CategoryInfo cat in dataWrapper.categories)
         {
             GameObject btnObj = Instantiate(stageButtonPrefab, container);
@@ -52,6 +56,9 @@ public class StageSelectManager : MonoBehaviour
     {
         ClearContainer();
 
+        // 戻るボタンを表示する
+        if (backButton != null) backButton.SetActive(true);
+
         foreach (StageInfo info in category.stages)
         {
             GameObject btnObj = Instantiate(stageButtonPrefab, container);
@@ -65,7 +72,5 @@ public class StageSelectManager : MonoBehaviour
             btn.onClick.RemoveAllListeners();
             btn.onClick.AddListener(() => script.OnClickStage());
         }
-
-        // 【任意】「戻るボタン」を一つ追加しても良いですね
     }
 }
