@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 
-// 注意：MonoBehaviourを継承させない。クラスの外側の public class も消す。
 [Serializable]
 public class StageInfo
 {
@@ -10,7 +9,14 @@ public class StageInfo
 }
 
 [Serializable]
+public class CategoryInfo
+{
+    public string categoryName;
+    public List<StageInfo> stages; // カテゴリの中にステージリストを持つ
+}
+
+[Serializable]
 public class StageDataWrapper
 {
-    public List<StageInfo> stages;
+    public List<CategoryInfo> categories;
 }

@@ -1,8 +1,38 @@
 ﻿{
-  "stages": [
-    { "id": 1, "stageName": "初級：まずはここから" },
-    { "id": 2, "stageName": "中級：駆け引きの練習" },
-    { "id": 3, "stageName": "上級：CPUが本気を出す" },
-    { "id": 100, "stageName": "伝説の七並べ" }
+  "categories": [
+    {
+      "categoryName": "超初級：まずはここから",
+      "stages": [
+        { "id": 0, "stageName": "チュートリアル" },
+        { "id": 99, "stageName": "練習ステージ" }
+      ]
+    },
+    {
+      "categoryName": "初級：入門編",
+      "stages": [
+        { "id": 1, "stageName": "最初の対戦" },
+        { "id": 2, "stageName": "カードの出し方練習" },
+        { "id": 3, "stageName": "戦略を練ろう" },
+        { "id": 4, "stageName": "コンボを決めよう" }
+      ]
+    },
+    {
+      "categoryName": "中級：本格対戦",
+      "stages": [
+        { "id": 5, "stageName": "対戦の基本" },
+        { "id": 6, "stageName": "デッキ構築入門" },
+        { "id": 7, "stageName": "特殊ルールに挑戦" },
+        { "id": 8, "stageName": "タイムアタック" }
+      ]
+    },
+    {
+      "categoryName": "上級：究極の戦い",
+      "stages": [
+        { "id": 9, "stageName": "プロ対戦者との戦い" },
+        { "id": 10, "stageName": "ランダムデッキチャレンジ" },
+        { "id": 11, "stageName": "無限モード" },
+        { "id": 12, "stageName": "究極のボスバトル" }
+      ]
+    }
   ]
 }

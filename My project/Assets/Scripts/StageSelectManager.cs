@@ -4,45 +4,68 @@ public class StageSelectManager : MonoBehaviour
 {
     public GameObject stageButtonPrefab;
     public Transform container;
+    private StageDataWrapper dataWrapper;
 
-    void Start()
+    void Awake()
     {
-        LoadStagesFromJson();
+        LoadJson();
+        ShowCategories(); // 最初は難易度一覧を表示
     }
 
-    void LoadStagesFromJson()
+    void LoadJson()
     {
-        // 1. ResourcesフォルダからJSONを読み込む
         TextAsset jsonFile = Resources.Load<TextAsset>("StageData");
+        dataWrapper = JsonUtility.FromJson<StageDataWrapper>(jsonFile.text);
+    }
 
-        if (jsonFile == null)
+    // コンテナの中身を空にする共通処理
+    void ClearContainer()
+    {
+        foreach (Transform child in container)
         {
-            Debug.LogError("JSONファイルが見つかりません！");
-            return;
+            Destroy(child.gameObject);
         }
+    }
 
-        // 2. JSONをクラスの形に変換
-        StageDataWrapper dataWrapper = JsonUtility.FromJson<StageDataWrapper>(jsonFile.text);
+    // 第一段階：難易度一覧を表示
+    public void ShowCategories()
+    {
+        ClearContainer();
 
-        // 3. 読み込んだリストを元にボタンを生成
-        foreach (StageInfo info in dataWrapper.stages)
+        foreach (CategoryInfo cat in dataWrapper.categories)
         {
             GameObject btnObj = Instantiate(stageButtonPrefab, container);
             StageButton script = btnObj.GetComponent<StageButton>();
 
-            if (script != null)
-            {
-                script.stageNumber = info.id;
-                if (script.stageText != null)
-                {
-                    script.stageText.text = info.stageName;
-                    Debug.Log("テキストをセットしました: " + info.stageName); // ログを出してみる
-                }
-                else
-                {
-                    Debug.LogError("stageTextがアサインされていません！");
-                }
-            }
+            // ボタンに難易度名を表示し、クリック時に「ShowStages」を呼ぶようにする
+            script.stageText.text = cat.categoryName;
+
+            // 重要：ボタンのクリックイベントをスクリプトから上書き設定する
+            UnityEngine.UI.Button btn = btnObj.GetComponent<UnityEngine.UI.Button>();
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(() => ShowStages(cat));
         }
+    }
+
+    // 第二段階：特定の難易度内のステージ一覧を表示
+    public void ShowStages(CategoryInfo category)
+    {
+        ClearContainer();
+
+        foreach (StageInfo info in category.stages)
+        {
+            GameObject btnObj = Instantiate(stageButtonPrefab, container);
+            StageButton script = btnObj.GetComponent<StageButton>();
+
+            script.stageNumber = info.id;
+            script.stageText.text = info.stageName;
+
+            // ステージボタンとしてのクリックイベント（シーン遷移など）を設定
+            UnityEngine.UI.Button btn = btnObj.GetComponent<UnityEngine.UI.Button>();
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(() => script.OnClickStage());
+        }
+
+        // 【任意】「戻るボタン」を一つ追加しても良いですね
     }
 }
