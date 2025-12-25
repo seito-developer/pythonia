@@ -15,7 +15,14 @@ public class StageSelectManager : MonoBehaviour
 
     void LoadJson()
     {
-        TextAsset jsonFile = Resources.Load<TextAsset>("StageData");
+        TextAsset jsonFile = Resources.Load<TextAsset>("StageIndex");
+
+        if (jsonFile == null)
+        {
+            Debug.LogError("Resources/StageIndex.json が見つかりません！");
+            return;
+        }
+
         dataWrapper = JsonUtility.FromJson<StageDataWrapper>(jsonFile.text);
     }
 

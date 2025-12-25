@@ -1,0 +1,16 @@
+{
+  "id": 3,
+  "stageName": "合計を求めよう",
+  "question": "0から2までの数（0, 1, 2）を順番に足し合わせた合計を表示してください。",
+  "handPieces": [
+    { "id": 10, "code": "total = 0" },
+    { "id": 11, "code": "for i in range(3):" },
+    { "id": 12, "code": "total += i" },
+    { "id": 13, "code": "print(total)" },
+    { "id": 14, "code": "while total < 3:" }
+  ],
+  "answer": {
+    "correctIds": [10, 11, 12, 13],
+    "correctIndents": [0, 0, 1, 0]
+  }
+}

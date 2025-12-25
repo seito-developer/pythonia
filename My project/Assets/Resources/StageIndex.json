@@ -3,17 +3,17 @@
     {
       "categoryName": "超初級：まずはここから",
       "stages": [
-        { "id": 0, "stageName": "チュートリアル" },
-        { "id": 99, "stageName": "練習ステージ" }
+        { "id": 1, "stageName": "最初の対戦" },
+        { "id": 2, "stageName": "カードの出し方練習" },
+        { "id": 3, "stageName": "戦略を練ろう" },
+        { "id": 4, "stageName": "コンボを決めよう" }
       ]
     },
     {
       "categoryName": "初級：入門編",
       "stages": [
-        { "id": 1, "stageName": "最初の対戦" },
-        { "id": 2, "stageName": "カードの出し方練習" },
-        { "id": 3, "stageName": "戦略を練ろう" },
-        { "id": 4, "stageName": "コンボを決めよう" }
+        { "id": 0, "stageName": "Test" },
+        { "id": 99, "stageName": "練習ステージ" }
       ]
     },
     {

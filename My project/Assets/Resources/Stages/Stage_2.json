@@ -1,0 +1,16 @@
+{
+  "id": 2,
+  "stageName": "数値の判定",
+  "question": "変数 x が 10 より大きい場合にのみ、\"Big\" と表示させてください。\n(x = 15 とします)",
+  "handPieces": [
+    { "id": 5, "code": "x = 15" },
+    { "id": 6, "code": "if x > 10:" },
+    { "id": 7, "code": "print(\"Big\")" },
+    { "id": 8, "code": "else:" },
+    { "id": 9, "code": "print(\"Small\")" }
+  ],
+  "answer": {
+    "correctIds": [5, 6, 7],
+    "correctIndents": [0, 0, 1]
+  }
+}
