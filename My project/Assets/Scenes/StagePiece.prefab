@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Button
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8298b9bc68f7249078e619db403a1fbe, type: 2}
+  m_sharedMaterial: {fileID: 5251756921180359775, guid: 8298b9bc68f7249078e619db403a1fbe, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -272,4 +272,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GamePiece
   pieceId: 0
   currentIndent: 0
-  codeText: {fileID: 0}
+  codeText: {fileID: 7962393442116899084}
