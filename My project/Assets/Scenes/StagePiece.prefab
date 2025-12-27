@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 9219301295006906831}
   - component: {fileID: 4889932082391695946}
   - component: {fileID: 6480963856366959034}
+  - component: {fileID: 1067538659379890236}
   m_Layer: 5
   m_Name: StagePiece
   m_TagString: Untagged
@@ -273,3 +274,15 @@ MonoBehaviour:
   pieceId: 0
   currentIndent: 0
   codeText: {fileID: 7962393442116899084}
+--- !u!225 &1067538659379890236
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899358178986041125}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
