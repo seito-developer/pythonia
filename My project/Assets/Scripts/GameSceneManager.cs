@@ -1,5 +1,7 @@
 using UnityEngine;
 using TMPro; // テキスト表示用
+using System.Collections.Generic; // リスト操作に必要
+using System.Linq;               // シャッフルに便利
 
 public class GameSceneManager : MonoBehaviour
 {
@@ -52,18 +54,26 @@ public class GameSceneManager : MonoBehaviour
         titleText.text = currentStage.stageName;
         questionText.text = currentStage.question;
 
-        // 既存のピースがあれば削除（念のため）
+        // 1. 手札のデータを一時的なリストにコピーする
+        List<PieceData> shuffledPieces = new List<PieceData>(currentStage.handPieces);
+
+        // 2. リストをランダムにシャッフルする（System.LinqとSystem.Randomを使用）
+        System.Random rng = new System.Random();
+        shuffledPieces = shuffledPieces.OrderBy(p => rng.Next()).ToList();
+
+        // 3. 既存のピースを削除（念のため）
         foreach (Transform child in handZone)
         {
             Destroy(child.gameObject);
         }
 
-        // 手札ピースの生成
-        foreach (var pData in currentStage.handPieces)
+        // 4. シャッフルされた順番でピースを生成し、HandZoneを親にする
+        foreach (var pData in shuffledPieces)
         {
+            // 第二引数に handZone を指定することで、生成時に直接 HandZone の中に入ります
             GameObject pObj = Instantiate(piecePrefab, handZone);
-            GamePiece script = pObj.GetComponent<GamePiece>();
 
+            GamePiece script = pObj.GetComponent<GamePiece>();
             if (script != null)
             {
                 script.pieceId = pData.id;
