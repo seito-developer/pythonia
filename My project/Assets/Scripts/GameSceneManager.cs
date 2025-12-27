@@ -13,11 +13,44 @@ public class GameSceneManager : MonoBehaviour
     [Header("Prefabs")]
     public GameObject piecePrefab;
     private StageInfo currentStage;
+    private GamePiece selectedPiece;
 
     void Start()
     {
         LoadStageData();
         SetupGameUI();
+    }
+
+    public void SetSelectedPiece(GamePiece piece)
+    {
+        // 以前選択していたピースがあれば、ハイライトを解除する
+        if (selectedPiece != null)
+        {
+            selectedPiece.SetHighlight(false);
+        }
+
+        // 新しく選択されたピースを保持し、ハイライトを付ける
+        selectedPiece = piece;
+        selectedPiece.SetHighlight(true);
+
+        Debug.Log($"ピース {piece.pieceId} が選択されました");
+    }
+
+    // --- 追加箇所 3: UIボタン（＋/－）から呼び出すメソッド ---
+    public void OnClickIncrease()
+    {
+        if (selectedPiece != null)
+        {
+            selectedPiece.IncreaseIndent();
+        }
+    }
+
+    public void OnClickDecrease()
+    {
+        if (selectedPiece != null)
+        {
+            selectedPiece.DecreaseIndent();
+        }
     }
 
     // 個別JSONファイルを読み込む処理

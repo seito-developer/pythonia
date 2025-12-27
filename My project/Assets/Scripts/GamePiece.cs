@@ -1,8 +1,9 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.UI;
 
-public class GamePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class GamePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     public int pieceId;        // JSONのIDと一致させる
     public int currentIndent = 0; // 現在のインデント数
@@ -12,10 +13,36 @@ public class GamePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     private CanvasGroup canvasGroup;
     private float indentWidth = 40f; // 1インデントあたりのズレ幅
 
+    private GameSceneManager manager;
+    private Image frameImage;
+
     void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
         if (canvasGroup == null) canvasGroup = gameObject.AddComponent<CanvasGroup>();
+
+        // コンポーネント取得を追加
+        frameImage = GetComponent<Image>();
+
+        // シーン内のマネージャーを探しておく（FindFirstObjectByTypeはUnity2021.3以降の推奨）
+        manager = Object.FindFirstObjectByType<GameSceneManager>();
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (manager != null)
+        {
+            manager.SetSelectedPiece(this);
+        }
+    }
+
+    public void SetHighlight(bool isSelected)
+    {
+        if (frameImage != null)
+        {
+            // 選択中は黄色、そうでなければ白（通常時）
+            frameImage.color = isSelected ? Color.yellow : Color.white;
+        }
     }
 
     // 1. ドラッグ開始
