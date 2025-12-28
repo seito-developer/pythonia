@@ -6,6 +6,7 @@ public class PieceData
 {
     public int id;
     public string code;
+    public int indent;
 }
 
 [Serializable]
@@ -22,6 +23,7 @@ public class StageInfo
     public string stageName;
     public string question;
     public List<PieceData> handPieces;
+    public PieceData[] correctPieces;
     public AnswerData answer;
 }
 

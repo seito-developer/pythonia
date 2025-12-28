@@ -15,6 +15,9 @@ public class GameSceneManager : MonoBehaviour
     private StageInfo currentStage;
     private GamePiece selectedPiece;
 
+    [Header("Board References")]
+    public Transform boardZone; // ヒエラルキーのBoardを紐付ける
+
     void Start()
     {
         LoadStageData();
@@ -50,6 +53,79 @@ public class GameSceneManager : MonoBehaviour
         if (selectedPiece != null)
         {
             selectedPiece.DecreaseIndent();
+        }
+    }
+
+    public void OnClickExecute()
+    {
+        // 1. ボードに並んでいるピースの現在の状態を取得
+        // 2. 正解データ（currentStage.correctPieces）と比較
+        // 3. すべて一致していれば「クリア！」、違えば「失敗...」
+
+        Debug.Log("判定を開始します...");
+        CheckAnswer();
+    }
+
+    void CheckAnswer()
+    {
+        // --- デバッグ用チェック ---
+        if (currentStage == null)
+        {
+            Debug.LogError("currentStage (JSON全体) が読み込めていません！");
+            return;
+        }
+        if (currentStage.correctPieces == null)
+        {
+            Debug.LogError("JSONの中に 'correctPieces' の項目が見つかりません！");
+            return;
+        }
+        // ------------------------
+
+        // 1. Boardの子要素から、GamePieceスクリプトを持っているものだけをリストアップ
+        List<GamePiece> placedPieces = new List<GamePiece>();
+        for (int i = 0; i < boardZone.childCount; i++)
+        {
+            GamePiece p = boardZone.GetChild(i).GetComponent<GamePiece>();
+            if (p != null)
+            {
+                placedPieces.Add(p);
+            }
+        }
+
+        // 2. 正解の数と合っているか確認
+        if (placedPieces.Count != currentStage.correctPieces.Length)
+        {
+            Debug.Log($"ピースの数が違います。現在: {placedPieces.Count}枚 / 正解: {currentStage.correctPieces.Length}枚");
+            return;
+        }
+
+        bool isAllCorrect = true;
+
+        for (int i = 0; i < placedPieces.Count; i++)
+        {
+            GamePiece piece = placedPieces[i];
+            PieceData correctData = currentStage.correctPieces[i];
+
+            // IDとインデントをチェック
+            if (piece.pieceId == correctData.id && piece.currentIndent == correctData.indent)
+            {
+                Debug.Log($"{i + 1}行目: OK");
+            }
+            else
+            {
+                Debug.Log($"{i + 1}行目: 間違い！ (期待ID:{correctData.id}, 期待インデント:{correctData.indent})");
+                isAllCorrect = false;
+            }
+        }
+
+        if (isAllCorrect)
+        {
+            Debug.Log("正解！ステージクリア！");
+            // TODO: クリア演出へ
+        }
+        else
+        {
+            Debug.Log("残念！どこかが間違っています。");
         }
     }
 

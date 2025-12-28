@@ -8,8 +8,9 @@
     { "id": 3, "code": "print(item)" },
     { "id": 4, "code": "if len(list) > 0:" }
   ],
-  "answer": {
-    "correctIds": [2, 1, 3],
-    "correctIndents": [0, 0, 1]
-  }
+  "correctPieces": [
+    { "id": 2, "code": "list = [\"Hello\", \"world\", \"!!\"]", "indent": 0 },
+    { "id": 1, "code": "for item in list:", "indent": 0 },
+    { "id": 3, "code": "print(item)", "indent": 1 }
+  ]
 }
