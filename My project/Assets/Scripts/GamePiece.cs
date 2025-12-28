@@ -75,31 +75,59 @@ public class GamePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         GameObject overObj = eventData.pointerEnter;
 
         // もしボードの上、またはボード内の他のピースの上にドロップしたら
-        if (overObj != null && (overObj.name == "Board" || overObj.transform.parent.name == "Board"))
+        if (overObj != null)
         {
-            Transform boardTrans = (overObj.name == "Board") ? overObj.transform : overObj.transform.parent;
-
-            // ボードに子要素として入れる
-            transform.SetParent(boardTrans);
-
-            // 【重要】ドロップした位置に基づいて、適切な順序（SiblingIndex）に差し込む
-            int newIndex = 0;
-            for (int i = 0; i < boardTrans.childCount; i++)
+            // 1. ボード（またはボード内のピース）の上にドロップした場合
+            if (overObj.name == "Board" || overObj.transform.parent.name == "Board")
             {
-                if (transform.position.y > boardTrans.GetChild(i).position.y)
+                Transform boardTrans = (overObj.name == "Board") ? overObj.transform : overObj.transform.parent;
+                transform.SetParent(boardTrans);
+
+                // 並び順の計算
+                int newIndex = 0;
+                for (int i = 0; i < boardTrans.childCount; i++)
                 {
+                    if (transform.position.y > boardTrans.GetChild(i).position.y)
+                    {
+                        newIndex = i;
+                        break;
+                    }
                     newIndex = i;
-                    break;
                 }
-                newIndex = i;
+                transform.SetSiblingIndex(newIndex);
             }
-            transform.SetSiblingIndex(newIndex);
+            // 2. 追加：手札エリア（HandZone）の上にドロップした場合
+            else if (IsUnderHandZone(overObj.transform))
+            {
+                // インデントをリセットして手札に戻す
+                currentIndent = 0;
+                UpdateVisual();
+
+                // manager を通じて handZone を取得するか、保存しておいた originalParent（初回はHandZoneのはず）を使う
+                // ここでは確実に現在の handZone に戻すため、manager から参照します
+                transform.SetParent(manager.handZone);
+            }
+            else
+            {
+                // ボードでも手札でもない場所に捨てたら、直前の親に戻す
+                transform.SetParent(originalParent);
+            }
         }
         else
         {
-            // ボード以外で離したら元の場所（手札など）に戻す
             transform.SetParent(originalParent);
         }
+    }
+
+    // 親を遡って HandZone かどうかを判定するヘルパー関数
+    private bool IsUnderHandZone(Transform target)
+    {
+        while (target != null)
+        {
+            if (target.name == "HandZone") return true;
+            target = target.parent;
+        }
+        return false;
     }
 
     // インデントを増やす
