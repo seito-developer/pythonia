@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro; // テキスト表示用
 using System.Collections.Generic; // リスト操作に必要
 using System.Linq;               // シャッフルに便利
+using UnityEngine.SceneManagement;
 
 public class GameSceneManager : MonoBehaviour
 {
@@ -18,13 +19,80 @@ public class GameSceneManager : MonoBehaviour
     private GamePiece selectedPiece;
 
     [Header("Board References")]
-    public Transform boardZone; // ヒエラルキーのBoardを紐付ける
+    public Transform boardZone;
+
+    [Header("Game System")]
+    public int maxLife = 3;
+    private int currentLife;
+    public TextMeshProUGUI lifeText;
+
+    [Header("Result UI")]
+    public GameObject resultPanel;
+    public TextMeshProUGUI resultTitleText;
+    public TextMeshProUGUI resultMessageText;
+    public TextMeshProUGUI actionButtonText;
 
     void Start()
     {
+        currentLife = maxLife;
+        UpdateLifeUI();
         LoadStageData();
         SetupGameUI();
         ShowQuestion();
+    }
+
+    public void ShowResultPanel(bool isWin)
+    {
+        resultPanel.SetActive(true);
+
+        actionButtonText.text = "ステージ選択へ";
+
+        if (isWin)
+        {
+            resultTitleText.text = "STAGE CLEAR!";
+            resultTitleText.color = Color.yellow;
+            resultMessageText.text = "素晴らしい！正解です。";
+
+        }
+        else
+        {
+            resultTitleText.text = "GAME OVER";
+            resultTitleText.color = Color.red;
+            resultMessageText.text = "ライフがなくなってしまいました。";
+        }
+    }
+
+    // パネルのボタンに紐付ける汎用メソッド
+    public void OnClickResultButton()
+    {
+        SceneManager.LoadScene("HigherStages");
+    }
+
+    void UpdateLifeUI()
+    {
+        if (lifeText != null)
+        {
+            // 例: 「ライフ: 3」や「★★★」と表示
+            lifeText.text = "ライフ: " + new string('★', currentLife);
+        }
+    }
+    // CheckAnswerの中で不正解だった時に呼ぶ
+    void Miss()
+    {
+        currentLife--;
+        UpdateLifeUI();
+        Debug.Log($"ミス！残りライフ: {currentLife}");
+
+        if (currentLife <= 0)
+        {
+            GameOver();
+        }
+    }
+
+    void GameOver()
+    {
+        Debug.Log("ゲームオーバー...");
+        ShowResultPanel(false); // 結果パネルを「失敗」モードで表示
     }
 
     // パネルを表示するメソッド
@@ -114,14 +182,14 @@ public class GameSceneManager : MonoBehaviour
             }
         }
 
+        bool isAllCorrect = true;
+
         // 2. 正解の数と合っているか確認
         if (placedPieces.Count != currentStage.correctPieces.Length)
         {
             Debug.Log($"ピースの数が違います。現在: {placedPieces.Count}枚 / 正解: {currentStage.correctPieces.Length}枚");
-            return;
+            isAllCorrect = false;
         }
-
-        bool isAllCorrect = true;
 
         for (int i = 0; i < placedPieces.Count; i++)
         {
@@ -142,12 +210,11 @@ public class GameSceneManager : MonoBehaviour
 
         if (isAllCorrect)
         {
-            Debug.Log("正解！ステージクリア！");
-            // TODO: クリア演出へ
+            ShowResultPanel(true);
         }
         else
         {
-            Debug.Log("残念！どこかが間違っています。");
+            Miss();
         }
     }
 
