@@ -7,8 +7,10 @@ public class GameSceneManager : MonoBehaviour
 {
     [Header("UI References")]
     public TextMeshProUGUI titleText;
-    public TextMeshProUGUI questionText;
     public Transform handZone;
+
+    public GameObject questionPanel;
+    public TextMeshProUGUI questionText; // 追加：パネル内のテキスト
 
     [Header("Prefabs")]
     public GameObject piecePrefab;
@@ -22,6 +24,26 @@ public class GameSceneManager : MonoBehaviour
     {
         LoadStageData();
         SetupGameUI();
+        ShowQuestion();
+    }
+
+    // パネルを表示するメソッド
+    public void ShowQuestion()
+    {
+        if (currentStage != null && questionPanel != null)
+        {
+            questionText.text = currentStage.question;
+            questionPanel.SetActive(true);
+        }
+    }
+
+    // パネルを閉じるメソッド（バツボタンに紐付ける）
+    public void HideQuestion()
+    {
+        if (questionPanel != null)
+        {
+            questionPanel.SetActive(false);
+        }
     }
 
     public void SetSelectedPiece(GamePiece piece)
