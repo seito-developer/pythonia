@@ -1,4 +1,8 @@
 using UnityEngine;
+using PlayFab;
+using PlayFab.ClientModels;
+using System.Collections.Generic;
+using TMPro;
 
 public class StageSelectManager : MonoBehaviour
 {
@@ -7,10 +11,38 @@ public class StageSelectManager : MonoBehaviour
     public GameObject backButton;
     private StageDataWrapper dataWrapper;
 
+    // PlayFabから取得したランクデータを保持する
+    private Dictionary<string, string> playerRanks = new Dictionary<string, string>();
+
     void Awake()
     {
         LoadJson();
-        ShowCategories(); // 最初は難易度一覧を表示
+        // 1. まずは難易度一覧を表示（この時点ではランク不要）
+        ShowCategories();
+
+        // 2. 裏でPlayFabから全ランクデータをロードしておく
+        LoadAllRanks();
+    }
+
+    // PlayFabからデータ取得
+    public void LoadAllRanks()
+    {
+        var request = new GetUserDataRequest();
+        PlayFabClientAPI.GetUserData(request,
+            result =>
+            {
+                playerRanks.Clear();
+                if (result.Data != null)
+                {
+                    foreach (var item in result.Data)
+                    {
+                        playerRanks.Add(item.Key, item.Value.Value);
+                    }
+                }
+                Debug.Log("PlayFabデータの同期完了");
+            },
+            error => Debug.LogError("ロード失敗: " + error.GenerateErrorReport())
+        );
     }
 
     void LoadJson()
@@ -50,6 +82,11 @@ public class StageSelectManager : MonoBehaviour
 
             // ボタンに難易度名を表示し、クリック時に「ShowStages」を呼ぶようにする
             script.stageText.text = cat.categoryName;
+            // 難易度ボタンにはランク表示は不要
+            if (script.rankText != null)
+            {
+                script.rankText.gameObject.SetActive(false);
+            }
 
             // 重要：ボタンのクリックイベントをスクリプトから上書き設定する
             UnityEngine.UI.Button btn = btnObj.GetComponent<UnityEngine.UI.Button>();
@@ -72,7 +109,18 @@ public class StageSelectManager : MonoBehaviour
             StageButton script = btnObj.GetComponent<StageButton>();
 
             script.stageNumber = info.id;
+
+            string rankKey = $"Stage_{info.id}_Rank";
+            string rankValue = "---"; // デフォルト（未クリア）
+
+            if (playerRanks.ContainsKey(rankKey))
+            {
+                rankValue = playerRanks[rankKey];
+            }
+
+            // script.stageText.text = $"{info.stageName} [{rankValue}]";
             script.stageText.text = info.stageName;
+            script.rankText.text = $"Clear Rank: {rankValue}";
 
             // ステージボタンとしてのクリックイベント（シーン遷移など）を設定
             UnityEngine.UI.Button btn = btnObj.GetComponent<UnityEngine.UI.Button>();

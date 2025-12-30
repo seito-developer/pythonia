@@ -6,6 +6,7 @@ public class StageButton : MonoBehaviour
 {
     public int stageNumber;
     public TextMeshProUGUI stageText;
+    public TextMeshProUGUI rankText;
 
     // ボタンが押された時に実行する
     public void OnClickStage()
