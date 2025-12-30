@@ -100,30 +100,62 @@ public class StageSelectManager : MonoBehaviour
     {
         ClearContainer();
 
-        // 戻るボタンを表示する
         if (backButton != null) backButton.SetActive(true);
 
-        foreach (StageInfo info in category.stages)
+        // カテゴリ内のステージをループ
+        for (int i = 0; i < category.stages.Count; i++)
         {
+            StageInfo info = category.stages[i];
             GameObject btnObj = Instantiate(stageButtonPrefab, container);
             StageButton script = btnObj.GetComponent<StageButton>();
+            UnityEngine.UI.Button btn = btnObj.GetComponent<UnityEngine.UI.Button>();
 
             script.stageNumber = info.id;
 
+            // --- ランク情報の取得 ---
             string rankKey = $"Stage_{info.id}_Rank";
-            string rankValue = "---"; // デフォルト（未クリア）
+            string rankValue = playerRanks.ContainsKey(rankKey) ? playerRanks[rankKey] : "-";
 
-            if (playerRanks.ContainsKey(rankKey))
+            // --- アンロック判定 ---
+            bool isUnlocked = false;
+
+            if (i == 0)
             {
-                rankValue = playerRanks[rankKey];
+                // カテゴリの最初のステージは常にアンロック
+                isUnlocked = true;
+            }
+            else
+            {
+                // 一つ前のステージのIDを取得
+                int prevStageId = category.stages[i - 1].id;
+                string prevRankKey = $"Stage_{prevStageId}_Rank";
+
+                // 前のステージのランクデータがあればアンロック
+                if (playerRanks.ContainsKey(prevRankKey))
+                {
+                    isUnlocked = true;
+                }
             }
 
-            // script.stageText.text = $"{info.stageName} [{rankValue}]";
-            script.stageText.text = info.stageName;
-            script.rankText.text = $"Clear Rank: {rankValue}";
+            // --- UIへの反映 ---
+            if (isUnlocked)
+            {
+                script.stageText.text = $"{info.stageName} [{rankValue}]";
+                btn.interactable = true; // ボタンを押せるようにする
+                                         // もしランク表示テキストがあるなら表示
+                if (script.rankText != null)
+                {
+                    script.rankText.gameObject.SetActive(true);
+                    script.rankText.text = $"Clear Rank：{rankValue}";
+                }
+            }
+            else
+            {
+                script.stageText.text = "??? (Locked)"; // 鍵アイコンなどにしてもOK
+                btn.interactable = false; // ボタンを押せなくする
+                if (script.rankText != null) script.rankText.gameObject.SetActive(false);
+            }
 
-            // ステージボタンとしてのクリックイベント（シーン遷移など）を設定
-            UnityEngine.UI.Button btn = btnObj.GetComponent<UnityEngine.UI.Button>();
             btn.onClick.RemoveAllListeners();
             btn.onClick.AddListener(() => script.OnClickStage());
         }
