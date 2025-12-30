@@ -3,6 +3,9 @@ using TMPro; // テキスト表示用
 using System.Collections.Generic; // リスト操作に必要
 using System.Linq;               // シャッフルに便利
 using UnityEngine.SceneManagement;
+using PlayFab;
+using PlayFab.ClientModels;
+using System.Collections.Generic;
 
 public class GameSceneManager : MonoBehaviour
 {
@@ -41,6 +44,29 @@ public class GameSceneManager : MonoBehaviour
         ShowQuestion();
     }
 
+    // ランクを判定して保存する
+    void SaveStageResult()
+    {
+        string rank = "";
+        if (currentLife == 3) rank = "S";
+        else if (currentLife == 2) rank = "A";
+        else rank = "B";
+
+        // 保存するデータ
+        var request = new UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>
+            {
+                { $"Stage_{currentStage.id}_Rank", rank }
+            }
+        };
+
+        PlayFabClientAPI.UpdateUserData(request,
+            result => Debug.Log($"{currentStage.id} のランク {rank} を保存しました"),
+            error => Debug.LogError("セーブ失敗: " + error.GenerateErrorReport())
+        );
+    }
+
     public void ShowResultPanel(bool isWin)
     {
         resultPanel.SetActive(true);
@@ -49,6 +75,7 @@ public class GameSceneManager : MonoBehaviour
 
         if (isWin)
         {
+            SaveStageResult();
             resultTitleText.text = "STAGE CLEAR!";
             resultTitleText.color = Color.yellow;
             resultMessageText.text = "素晴らしい！正解です。";
