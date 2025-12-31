@@ -8,6 +8,12 @@ public class AudioManager : MonoBehaviour
     public AudioSource bgmSource; // BGM用スピーカー
     public AudioSource seMenuSource;  // SE用スピーカー
     public AudioSource seTitleSource;  // タイトル用スピーカー
+    public AudioSource seResultSuccessSource;  // 結果成功用スピーカー
+    public AudioSource seResultFailureSource;  // 結果失敗用スピー
+    public AudioSource sePieceSource;  // ピース用スピーカー
+    public AudioSource seIndentSource;  // インデント用スピーカー
+    public AudioSource seMissSource;  // ミス用スピーカー
+    public AudioSource seWindowSource;  // ウィンドウ用スピーカー
 
     void Awake()
     {
@@ -40,14 +46,28 @@ public class AudioManager : MonoBehaviour
     {
         seTitleSource.PlayOneShot(clip);
     }
-
-
-    // game-clear.mp3 
-    // game-over.mp3 
-    // indent.mp3 
-    // menu.mp3 
-    // miss.mp3 
-    // piece.mp3 
-    // title.mp3 
-    // window-open.mp3
+    public void PlayResultSuccess(AudioClip clip)
+    {
+        seResultSuccessSource.PlayOneShot(clip);
+    }
+    public void PlayResultFailure(AudioClip clip)
+    {
+        seResultFailureSource.PlayOneShot(clip);
+    }
+    public void PlayPiece(AudioClip clip)
+    {
+        sePieceSource.PlayOneShot(clip);
+    }
+    public void PlayIndent(AudioClip clip)
+    {
+        seIndentSource.PlayOneShot(clip);
+    }
+    public void PlayMiss(AudioClip clip)
+    {
+        seMissSource.PlayOneShot(clip);
+    }
+    public void PlayWindow(AudioClip clip)
+    {
+        seWindowSource.PlayOneShot(clip);
+    }
 }

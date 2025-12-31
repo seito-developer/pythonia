@@ -80,12 +80,15 @@ public class GameSceneManager : MonoBehaviour
             resultTitleText.color = Color.yellow;
             resultMessageText.text = "素晴らしい！正解です。";
 
+            AudioManager.instance.PlayResultSuccess(AudioManager.instance.seResultSuccessSource.clip);
         }
         else
         {
             resultTitleText.text = "GAME OVER";
             resultTitleText.color = Color.red;
             resultMessageText.text = "ライフがなくなってしまいました。";
+
+            AudioManager.instance.PlayResultFailure(AudioManager.instance.seResultFailureSource.clip);
         }
     }
 
@@ -110,6 +113,8 @@ public class GameSceneManager : MonoBehaviour
         UpdateLifeUI();
         Debug.Log($"ミス！残りライフ: {currentLife}");
 
+        AudioManager.instance.PlayMiss(AudioManager.instance.seMissSource.clip);
+
         if (currentLife <= 0)
         {
             GameOver();
@@ -129,6 +134,7 @@ public class GameSceneManager : MonoBehaviour
         {
             questionText.text = currentStage.question;
             questionPanel.SetActive(true);
+            AudioManager.instance.PlayWindow(AudioManager.instance.seWindowSource.clip);
         }
     }
 
@@ -138,6 +144,7 @@ public class GameSceneManager : MonoBehaviour
         if (questionPanel != null)
         {
             questionPanel.SetActive(false);
+            AudioManager.instance.PlayWindow(AudioManager.instance.seWindowSource.clip);
         }
     }
 
@@ -153,6 +160,7 @@ public class GameSceneManager : MonoBehaviour
         selectedPiece = piece;
         selectedPiece.SetHighlight(true);
 
+        AudioManager.instance.PlayPiece(AudioManager.instance.sePieceSource.clip);
         Debug.Log($"ピース {piece.pieceId} が選択されました");
     }
 
@@ -162,6 +170,7 @@ public class GameSceneManager : MonoBehaviour
         if (selectedPiece != null)
         {
             selectedPiece.IncreaseIndent();
+            AudioManager.instance.PlayIndent(AudioManager.instance.seIndentSource.clip);
         }
     }
 
@@ -170,6 +179,7 @@ public class GameSceneManager : MonoBehaviour
         if (selectedPiece != null)
         {
             selectedPiece.DecreaseIndent();
+            AudioManager.instance.PlayIndent(AudioManager.instance.seIndentSource.clip);
         }
     }
 
