@@ -100,6 +100,8 @@ public class StageSelectManager : MonoBehaviour
     {
         ClearContainer();
 
+        AudioManager.instance.PlayMenu(AudioManager.instance.seMenuSource.clip);
+
         if (backButton != null) backButton.SetActive(true);
 
         // カテゴリ内のステージをループ
