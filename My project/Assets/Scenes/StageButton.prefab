@@ -152,7 +152,7 @@ GameObject:
   - component: {fileID: 4410216076230979657}
   - component: {fileID: 9200124886297981239}
   m_Layer: 5
-  m_Name: RankButton
+  m_Name: StageButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
