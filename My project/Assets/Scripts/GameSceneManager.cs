@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using PlayFab;
 using PlayFab.ClientModels;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public class GameSceneManager : MonoBehaviour
 {
@@ -31,6 +32,7 @@ public class GameSceneManager : MonoBehaviour
 
     [Header("Result UI")]
     public GameObject resultPanel;
+    public CanvasGroup resultCanvasGroup;
     public TextMeshProUGUI resultTitleText;
     public TextMeshProUGUI resultMessageText;
     public TextMeshProUGUI actionButtonText;
@@ -72,6 +74,14 @@ public class GameSceneManager : MonoBehaviour
         resultPanel.SetActive(true);
 
         actionButtonText.text = "ステージ選択へ";
+
+        // --- パターンA：下からスライドしてくる ---
+        resultPanel.transform.localPosition = new Vector3(0, -1000, 0); // 初期位置
+        resultPanel.transform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutBack);
+
+        // --- パターンB：透明度をフェードインさせる ---
+        resultCanvasGroup.alpha = 0;
+        resultCanvasGroup.DOFade(1f, 0.5f);
 
         if (isWin)
         {
