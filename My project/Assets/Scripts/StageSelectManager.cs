@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using PlayFab;
 using PlayFab.ClientModels;
 using System.Collections.Generic;
@@ -8,7 +9,8 @@ public class StageSelectManager : MonoBehaviour
 {
     public GameObject stageButtonPrefab;
     public Transform container;
-    public GameObject backButton;
+    public GameObject backButtonStages;
+    public GameObject backButtonTitle;
     private StageDataWrapper dataWrapper;
 
     // PlayFabから取得したランクデータを保持する
@@ -72,8 +74,9 @@ public class StageSelectManager : MonoBehaviour
     {
         ClearContainer();
 
-        // 戻るボタンを隠す
-        if (backButton != null) backButton.SetActive(false);
+        // 戻るボタンのON/OFF
+        if (backButtonStages != null) backButtonStages.SetActive(false);
+        if (backButtonTitle != null) backButtonTitle.SetActive(true);
 
         foreach (CategoryInfo cat in dataWrapper.categories)
         {
@@ -100,7 +103,9 @@ public class StageSelectManager : MonoBehaviour
     {
         ClearContainer();
 
-        if (backButton != null) backButton.SetActive(true);
+        // 戻るボタンのON/OFF
+        if (backButtonStages != null) backButtonStages.SetActive(true);
+        if (backButtonTitle != null) backButtonTitle.SetActive(false);
 
         // カテゴリ内のステージをループ
         for (int i = 0; i < category.stages.Count; i++)
@@ -160,4 +165,12 @@ public class StageSelectManager : MonoBehaviour
             btn.onClick.AddListener(() => script.OnClickStage());
         }
     }
+
+    public void ShowTitle()
+    {
+        SceneManager.LoadScene("TitleScene");
+        AudioManager.instance.PlayMenu(AudioManager.instance.seMenuSource.clip);
+    }
+
+
 }
