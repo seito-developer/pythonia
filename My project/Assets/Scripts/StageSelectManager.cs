@@ -145,7 +145,7 @@ public class StageSelectManager : MonoBehaviour
             // --- UIへの反映 ---
             if (isUnlocked)
             {
-                script.stageText.text = $"{info.stageName} [{rankValue}]";
+                script.stageText.text = $"{info.stageName}";
                 btn.interactable = true; // ボタンを押せるようにする
                                          // もしランク表示テキストがあるなら表示
                 if (script.rankText != null)
@@ -156,7 +156,7 @@ public class StageSelectManager : MonoBehaviour
             }
             else
             {
-                script.stageText.text = "??? (Locked)"; // 鍵アイコンなどにしてもOK
+                script.stageText.text = "???"; // 鍵アイコンなどにしてもOK
                 btn.interactable = false; // ボタンを押せなくする
                 if (script.rankText != null) script.rankText.gameObject.SetActive(false);
             }

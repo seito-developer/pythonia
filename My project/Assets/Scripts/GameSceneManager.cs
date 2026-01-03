@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro; // テキスト表示用
 using System.Collections.Generic; // リスト操作に必要
 using System.Linq;               // シャッフルに便利
@@ -32,9 +33,13 @@ public class GameSceneManager : MonoBehaviour
 
     [Header("Result UI")]
     public GameObject resultPanel;
+    public CanvasGroup resultCanvasGroup;
     public TextMeshProUGUI resultTitleText;
     public TextMeshProUGUI resultMessageText;
     public TextMeshProUGUI actionButtonText;
+    public List<Image> resultStarIcons;
+    public Sprite activeStarSprite;
+    public Sprite emptyStarSprite;
 
     void Start()
     {
@@ -71,15 +76,32 @@ public class GameSceneManager : MonoBehaviour
     public void ShowResultPanel(bool isWin)
     {
         resultPanel.SetActive(true);
-
         actionButtonText.text = "ステージ選択へ";
+
+        // 一旦すべての星を「空」の状態にリセットし、サイズを0にする
+        foreach (var star in resultStarIcons)
+        {
+            star.sprite = emptyStarSprite;
+            star.transform.localScale = Vector3.zero;
+        }
 
         // --- パターンA：下からスライドしてくる ---
         resultPanel.transform.localPosition = new Vector3(0, -1000, 0); // 初期位置
-        resultPanel.transform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutBack);
+        resultPanel.transform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutBack).OnComplete(() =>
+        {
+            // パネルが出きった後に、クリア時のみ星をアニメーションさせる
+            if (isWin)
+            {
+                AnimateStars();
+            }
+        });
+
+        resultCanvasGroup.alpha = 0;
+        resultCanvasGroup.DOFade(1f, 0.5f);
 
         if (isWin)
         {
+            AnimateStars();
             SaveStageResult();
             resultTitleText.text = "STAGE CLEAR!";
             resultTitleText.color = Color.yellow;
@@ -94,6 +116,33 @@ public class GameSceneManager : MonoBehaviour
             resultMessageText.text = "ライフがなくなってしまいました。";
 
             AudioManager.instance.PlayResultFailure(AudioManager.instance.seResultFailureSource.clip);
+        }
+    }
+
+    // 星を1つずつ表示させるアニメーション
+    void AnimateStars()
+    {
+        for (int i = 0; i < resultStarIcons.Count; i++)
+        {
+            if (i < currentLife)
+            {
+                int index = i; // ラムダ式用にインデックスを保持
+                               // 0.2秒ずつずらして実行
+                DOVirtual.DelayedCall(index * 0.3f, () =>
+                {
+                    resultStarIcons[index].sprite = activeStarSprite;
+                    // 弾むようなアニメーション
+                    resultStarIcons[index].transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack);
+                    // 星が出る音を鳴らすのもおすすめ
+                    // AudioManager.instance.PlaySE(starSE);
+                });
+            }
+            else
+            {
+                // ライフがない分の星は、うっすら表示するだけにするなどの演出
+                resultStarIcons[i].transform.DOScale(Vector3.one, 0.5f);
+                resultStarIcons[i].color = new Color(1, 1, 1, 0.3f);
+            }
         }
     }
 
