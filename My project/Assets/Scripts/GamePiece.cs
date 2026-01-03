@@ -77,39 +77,35 @@ public class GamePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         // もしボードの上、またはボード内の他のピースの上にドロップしたら
         if (overObj != null)
         {
-            // 1. ボード（またはボード内のピース）の上にドロップした場合
-            if (overObj.name == "Board" || overObj.transform.parent.name == "Board")
-            {
-                Transform boardTrans = (overObj.name == "Board") ? overObj.transform : overObj.transform.parent;
-                transform.SetParent(boardTrans);
+            // 1. ボード（またはボード内の要素）の上にドロップしたか判定
+            Transform boardRoot = FindParentByName(overObj.transform, "Board");
 
-                // 並び順の計算
-                int newIndex = 0;
-                for (int i = 0; i < boardTrans.childCount; i++)
+            if (boardRoot != null)
+            {
+                transform.SetParent(boardRoot);
+
+                // 並び順の計算（既存のロジック）
+                int newIndex = boardRoot.childCount; // デフォルトは一番下
+                for (int i = 0; i < boardRoot.childCount; i++)
                 {
-                    if (transform.position.y > boardTrans.GetChild(i).position.y)
+                    if (transform.position.y > boardRoot.GetChild(i).position.y)
                     {
                         newIndex = i;
                         break;
                     }
-                    newIndex = i;
                 }
                 transform.SetSiblingIndex(newIndex);
             }
-            // 2. 追加：手札エリア（HandZone）の上にドロップした場合
+            // 2. 手札エリアの上にドロップした場合
             else if (IsUnderHandZone(overObj.transform))
             {
-                // インデントをリセットして手札に戻す
                 currentIndent = 0;
                 UpdateVisual();
-
-                // manager を通じて handZone を取得するか、保存しておいた originalParent（初回はHandZoneのはず）を使う
-                // ここでは確実に現在の handZone に戻すため、manager から参照します
                 transform.SetParent(manager.handZone);
             }
             else
             {
-                // ボードでも手札でもない場所に捨てたら、直前の親に戻す
+                // どこでもない場所なら元の場所へ
                 transform.SetParent(originalParent);
             }
         }
@@ -157,5 +153,16 @@ public class GamePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         Vector3 pos = codeText.rectTransform.localPosition;
         pos.x = currentIndent * indentWidth;
         codeText.rectTransform.localPosition = pos;
+    }
+
+    // 親を遡って特定の名前のオブジェクトを探すヘルパー関数
+    private Transform FindParentByName(Transform target, string targetName)
+    {
+        while (target != null)
+        {
+            if (target.name == targetName) return target;
+            target = target.parent;
+        }
+        return null;
     }
 }

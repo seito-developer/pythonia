@@ -28,11 +28,10 @@ public class GameSceneManager : MonoBehaviour
     [Header("Game System")]
     public int maxLife = 3;
     private int currentLife;
-    public TextMeshProUGUI lifeText;
+    public List<GameObject> lifeIcons;
 
     [Header("Result UI")]
     public GameObject resultPanel;
-    public CanvasGroup resultCanvasGroup;
     public TextMeshProUGUI resultTitleText;
     public TextMeshProUGUI resultMessageText;
     public TextMeshProUGUI actionButtonText;
@@ -79,10 +78,6 @@ public class GameSceneManager : MonoBehaviour
         resultPanel.transform.localPosition = new Vector3(0, -1000, 0); // 初期位置
         resultPanel.transform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutBack);
 
-        // --- パターンB：透明度をフェードインさせる ---
-        resultCanvasGroup.alpha = 0;
-        resultCanvasGroup.DOFade(1f, 0.5f);
-
         if (isWin)
         {
             SaveStageResult();
@@ -110,10 +105,26 @@ public class GameSceneManager : MonoBehaviour
 
     void UpdateLifeUI()
     {
-        if (lifeText != null)
+        for (int i = 0; i < lifeIcons.Count; i++)
         {
-            // 例: 「ライフ: 3」や「★★★」と表示
-            lifeText.text = "ライフ: " + new string('★', currentLife);
+            // i番目のアイコンを表示するかどうか判定
+            // 例：ライフが2なら、0番目と1番目は表示(true)、2番目は非表示(false)
+            if (i < currentLife)
+            {
+                lifeIcons[i].SetActive(true);
+            }
+            else
+            {
+                // 非表示にする際、DOTweenで少し演出を入れると豪華になります
+                if (lifeIcons[i].activeSelf)
+                {
+                    // 小さくなって消える演出（任意）
+                    lifeIcons[i].transform.DOScale(Vector3.zero, 0.3f).OnComplete(() =>
+                    {
+                        lifeIcons[i].SetActive(false);
+                    });
+                }
+            }
         }
     }
     // CheckAnswerの中で不正解だった時に呼ぶ
