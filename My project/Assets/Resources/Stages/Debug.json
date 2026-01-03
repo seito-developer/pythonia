@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "stageName": "Hello World",
+  "question": "コンソールに次のように表示させてください。\n\n\"Hello\nworld\n!!\"",
+  "handPieces": [
+    { "id": 1, "code": "for item in list:" },
+    { "id": 2, "code": "list = [\"Hello\", \"world\", \"!!\"]" },
+    { "id": 3, "code": "print(item)" },
+    { "id": 4, "code": "if len(list) > 0:" }
+  ],
+  "correctPieces": [
+    { "id": 2, "code": "list = [\"Hello\", \"world\", \"!!\"]", "indent": 0 },
+    { "id": 1, "code": "for item in list:", "indent": 0 },
+    { "id": 3, "code": "print(item)", "indent": 1 }
+  ]
+}

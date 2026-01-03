@@ -342,7 +342,11 @@ public class GameSceneManager : MonoBehaviour
         }
         else
         {
+            // Debug用ファイルを読み込む
             Debug.LogError($"エラー: {filePath} が見つかりません。Resources/Stages フォルダを確認してください。");
+            string debugFilePath = $"Stages/Debug";
+            TextAsset debugJsonFile = Resources.Load<TextAsset>(debugFilePath);
+            currentStage = JsonUtility.FromJson<StageInfo>(debugJsonFile.text);
         }
     }
 
