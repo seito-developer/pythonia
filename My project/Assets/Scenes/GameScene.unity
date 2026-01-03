@@ -2022,7 +2022,6 @@ MonoBehaviour:
   - {fileID: 749117514}
   - {fileID: 1266387834}
   resultPanel: {fileID: 419324560}
-  resultCanvasGroup: {fileID: 0}
   resultTitleText: {fileID: 2001264723}
   resultMessageText: {fileID: 7613857}
   actionButtonText: {fileID: 2050145663}
@@ -2350,7 +2349,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -40, y: -40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1044970465
 CanvasRenderer:

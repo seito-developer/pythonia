@@ -16,6 +16,9 @@ public class GamePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
     private GameSceneManager manager;
     private Image frameImage;
 
+    private Color pieceBgColor = new Color32(91, 91, 91, 255);
+    private Color pieceBgSelectedColor = new Color32(125, 125, 125, 255);
+
     void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
@@ -41,7 +44,7 @@ public class GamePiece : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDra
         if (frameImage != null)
         {
             // 選択中は黄色、そうでなければ白（通常時）
-            frameImage.color = isSelected ? Color.yellow : Color.white;
+            frameImage.color = isSelected ? pieceBgSelectedColor : pieceBgColor;
         }
     }
 
