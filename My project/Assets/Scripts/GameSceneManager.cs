@@ -218,9 +218,10 @@ public class GameSceneManager : MonoBehaviour
             }
         }
 
-        // --- B. パズルピースの生成 (既存ロジックを維持) ---
         titleText.text = currentStage.stageName;
         questionPanel.SetActive(true);
+        questionPanel.transform.localPosition = new Vector3(0, -1000, 0);
+        questionPanel.transform.DOLocalMoveY(0, 0.5f).SetEase(Ease.OutBack);
     }
 
     // パネルを閉じるメソッド（バツボタンに紐付ける）
