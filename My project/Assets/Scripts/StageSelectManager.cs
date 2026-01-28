@@ -18,12 +18,37 @@ public class StageSelectManager : MonoBehaviour
 
     void Awake()
     {
-        LoadJson();
+        // LoadJson();
         // 1. まずは難易度一覧を表示（この時点ではランク不要）
-        ShowCategories();
+        ClearContainer();
 
         // 2. 裏でPlayFabから全ランクデータをロードしておく
         LoadAllRanks();
+        LoadStageIndexFromPlayFab();
+    }
+
+    void LoadStageIndexFromPlayFab()
+    {
+        var request = new GetTitleDataRequest
+        {
+            Keys = new List<string> { "StageIndex" }
+        };
+
+        PlayFabClientAPI.GetTitleData(request,
+            result =>
+            {
+                if (result.Data != null && result.Data.ContainsKey("StageIndex"))
+                {
+                    // PlayFabの文字列をクラスに変換
+                    dataWrapper = JsonUtility.FromJson<StageDataWrapper>(result.Data["StageIndex"]);
+                    Debug.Log("ステージ目次の取得完了");
+
+                    // データが届いてからカテゴリーを表示
+                    ShowCategories();
+                }
+            },
+            error => Debug.LogError("目次ロード失敗: " + error.GenerateErrorReport())
+        );
     }
 
     // PlayFabからデータ取得
@@ -47,18 +72,18 @@ public class StageSelectManager : MonoBehaviour
         );
     }
 
-    void LoadJson()
-    {
-        TextAsset jsonFile = Resources.Load<TextAsset>("StageIndex");
+    // void LoadJson()
+    // {
+    //     TextAsset jsonFile = Resources.Load<TextAsset>("StageIndex");
 
-        if (jsonFile == null)
-        {
-            Debug.LogError("Resources/StageIndex.json が見つかりません！");
-            return;
-        }
+    //     if (jsonFile == null)
+    //     {
+    //         Debug.LogError("Resources/StageIndex.json が見つかりません！");
+    //         return;
+    //     }
 
-        dataWrapper = JsonUtility.FromJson<StageDataWrapper>(jsonFile.text);
-    }
+    //     dataWrapper = JsonUtility.FromJson<StageDataWrapper>(jsonFile.text);
+    // }
 
     // コンテナの中身を空にする共通処理
     void ClearContainer()
