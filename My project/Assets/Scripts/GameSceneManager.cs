@@ -349,6 +349,17 @@ public class GameSceneManager : MonoBehaviour
                     currentStage = JsonUtility.FromJson<StageInfo>(result.Data[key]);
                     Debug.Log($"PlayFabからステージ {targetId} を読み込みました");
 
+                    string debugJson = JsonUtility.ToJson(currentStage, true);
+                    Debug.Log("<color=cyan>解析後のオブジェクト構造:</color>\n" + debugJson);
+
+                    // --- 構造のチェック用ログ ---
+                    if (currentStage != null)
+                    {
+                        Debug.Log($"[Parsed] StageName: {currentStage.stageName}");
+                        Debug.Log($"[Parsed] Contents Count: {(currentStage.contents != null ? currentStage.contents.Count.ToString() : "null")}");
+                        Debug.Log($"[Parsed] CorrectPieces Count: {(currentStage.correctPieces != null ? currentStage.correctPieces.Length.ToString() : "null")}");
+                    }
+
                     // データが届いた後にUIをセットアップ
                     SetupGameUI();
                 }
@@ -376,6 +387,8 @@ public class GameSceneManager : MonoBehaviour
         {
             foreach (var part in currentStage.contents)
             {
+                Debug.Log($"Part : {part}");
+                Debug.Log($"Content Part - Type: {part.type}, Value: {part.value}");
                 GameObject prefab = (part.type == "code") ? codePartPrefab : textPartPrefab;
                 GameObject instance = Instantiate(prefab, questionContentParent);
                 var tmp = instance.GetComponentInChildren<TextMeshProUGUI>();
