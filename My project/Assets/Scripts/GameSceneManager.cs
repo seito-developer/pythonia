@@ -41,13 +41,18 @@ public class GameSceneManager : MonoBehaviour
     public Sprite activeStarSprite;
     public Sprite emptyStarSprite;
 
+    [Header("B-Plan UI")]
+    public Transform questionContentParent; // Vertical Layout Groupを付けた親
+    public GameObject textPartPrefab;       // テキスト用プレハブ
+    public GameObject codePartPrefab;       // コード枠用プレハブ
+
     void Start()
     {
         currentLife = maxLife;
         UpdateLifeUI();
         LoadStageData();
         SetupGameUI();
-        ShowQuestion();
+        // ShowQuestion();
     }
 
     // ランクを判定して保存する
@@ -198,15 +203,15 @@ public class GameSceneManager : MonoBehaviour
     }
 
     // パネルを表示するメソッド
-    public void ShowQuestion()
-    {
-        if (currentStage != null && questionPanel != null)
-        {
-            questionText.text = currentStage.question;
-            questionPanel.SetActive(true);
-            AudioManager.instance.PlayWindow(AudioManager.instance.seWindowSource.clip);
-        }
-    }
+    // public void ShowQuestion()
+    // {
+    //     if (currentStage != null && questionPanel != null)
+    //     {
+    //         questionText.text = currentStage.question;
+    //         questionPanel.SetActive(true);
+    //         AudioManager.instance.PlayWindow(AudioManager.instance.seWindowSource.clip);
+    //     }
+    // }
 
     // パネルを閉じるメソッド（バツボタンに紐付ける）
     public void HideQuestion()
@@ -329,59 +334,70 @@ public class GameSceneManager : MonoBehaviour
     void LoadStageData()
     {
         int targetId = GameData.SelectedStageId;
+        string key = $"Stage_{targetId}";
 
-        // Resources/Stages/Stage_X を読み込む
-        string filePath = $"Stages/Stage_{targetId}";
-        TextAsset jsonFile = Resources.Load<TextAsset>(filePath);
+        var request = new GetTitleDataRequest
+        {
+            Keys = new List<string> { key }
+        };
 
-        if (jsonFile != null)
-        {
-            // 個別ファイルは StageInfo 構造そのものなので直接デコード
-            currentStage = JsonUtility.FromJson<StageInfo>(jsonFile.text);
-            Debug.Log($"ステージ {targetId} のデータを読み込みました。");
-        }
-        else
-        {
-            // Debug用ファイルを読み込む
-            Debug.LogError($"エラー: {filePath} が見つかりません。Resources/Stages フォルダを確認してください。");
-            string debugFilePath = $"Stages/Debug";
-            TextAsset debugJsonFile = Resources.Load<TextAsset>(debugFilePath);
-            currentStage = JsonUtility.FromJson<StageInfo>(debugJsonFile.text);
-        }
+        PlayFabClientAPI.GetTitleData(request,
+            result =>
+            {
+                if (result.Data != null && result.Data.ContainsKey(key))
+                {
+                    currentStage = JsonUtility.FromJson<StageInfo>(result.Data[key]);
+                    Debug.Log($"PlayFabからステージ {targetId} を読み込みました");
+
+                    // データが届いた後にUIをセットアップ
+                    SetupGameUI();
+                }
+                else
+                {
+                    Debug.LogError("PlayFabにデータが存在しません: " + key);
+                }
+            },
+            error => Debug.LogError(error.GenerateErrorReport())
+        );
     }
 
     // 読み込んだデータを画面に反映する処理
     void SetupGameUI()
     {
-        if (currentStage == null)
+        if (currentStage == null) return;
+
+        // --- A. 問題文エリアの動的生成 (B案) ---
+        foreach (Transform child in questionContentParent)
         {
-            Debug.LogError("currentStageがNullです！JSON読み込みに失敗しています。");
-            return;
+            Destroy(child.gameObject);
         }
 
-        // 問題文とタイトルのセット
+        if (currentStage.contents != null)
+        {
+            foreach (var part in currentStage.contents)
+            {
+                GameObject prefab = (part.type == "code") ? codePartPrefab : textPartPrefab;
+                GameObject instance = Instantiate(prefab, questionContentParent);
+                var tmp = instance.GetComponentInChildren<TextMeshProUGUI>();
+                if (tmp != null) tmp.text = part.value;
+            }
+        }
+
+        // --- B. パズルピースの生成 (既存ロジックを維持) ---
         titleText.text = currentStage.stageName;
-        questionText.text = currentStage.question;
 
-        // 1. 手札のデータを一時的なリストにコピーする
         List<PieceData> shuffledPieces = new List<PieceData>(currentStage.handPieces);
-
-        // 2. リストをランダムにシャッフルする（System.LinqとSystem.Randomを使用）
         System.Random rng = new System.Random();
         shuffledPieces = shuffledPieces.OrderBy(p => rng.Next()).ToList();
 
-        // 3. 既存のピースを削除（念のため）
         foreach (Transform child in handZone)
         {
             Destroy(child.gameObject);
         }
 
-        // 4. シャッフルされた順番でピースを生成し、HandZoneを親にする
         foreach (var pData in shuffledPieces)
         {
-            // 第二引数に handZone を指定することで、生成時に直接 HandZone の中に入ります
             GameObject pObj = Instantiate(piecePrefab, handZone);
-
             GamePiece script = pObj.GetComponent<GamePiece>();
             if (script != null)
             {
@@ -389,5 +405,7 @@ public class GameSceneManager : MonoBehaviour
                 script.codeText.text = pData.code;
             }
         }
+
+        questionPanel.SetActive(true);
     }
 }

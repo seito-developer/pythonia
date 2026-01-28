@@ -22,9 +22,13 @@ public class StageInfo
     public int id;
     public string stageName;
     public string question;
-    public List<PieceData> handPieces;
+    // public List<PieceData> handPieces;
+    // public PieceData[] correctPieces;
+    // public AnswerData answer;
+
+    public List<ContentPart> contents;
+    public PieceData[] handPieces;
     public PieceData[] correctPieces;
-    public AnswerData answer;
 }
 
 [Serializable]
@@ -38,4 +42,11 @@ public class CategoryInfo
 public class StageDataWrapper
 {
     public List<CategoryInfo> categories;
+}
+
+[System.Serializable]
+public class ContentPart
+{
+    public string type; // "text", "code", "image"
+    public string value;
 }
