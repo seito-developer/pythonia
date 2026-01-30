@@ -4,7 +4,15 @@
   "contents": [
     {
       "type": "text",
-      "value": "コンソールに次のように表示させてください。\n\n\"Hello\nworld\n!!\""
+      "value": "次のコードの誤りを探してください。"
+    },
+    {
+      "type": "code",
+      "value": "int x = \"Hello\";"
+    },
+    {
+      "type": "text",
+      "value": "※テストテストテスト"
     }
   ],
   "handPieces": [

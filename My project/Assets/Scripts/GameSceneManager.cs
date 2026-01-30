@@ -175,10 +175,19 @@ public class GameSceneManager : MonoBehaviour
     // パネルを表示するメソッド
     public void ShowQuestion()
     {
+        if (!questionContentParent) return;
+
+        foreach (Transform child in questionContentParent)
+        {
+            Debug.Log("child:" + child);
+            Destroy(child.gameObject);
+        }
+
         if (currentStage.contents != null)
         {
             foreach (var part in currentStage.contents)
             {
+
                 Debug.Log($"Part : {part}");
                 Debug.Log($"Content Part - Type: {part.type}, Value: {part.value}");
                 GameObject prefab = (part.type == "code") ? codePartPrefab : textPartPrefab;
@@ -362,11 +371,6 @@ public class GameSceneManager : MonoBehaviour
     {
         if (currentStage == null) return;
 
-        // --- A. 問題文エリアの動的生成 (B案) ---
-        foreach (Transform child in questionContentParent)
-        {
-            Destroy(child.gameObject);
-        }
         ShowQuestion();
 
 
