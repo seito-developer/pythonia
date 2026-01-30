@@ -49,7 +49,7 @@ public class GameSceneManager : MonoBehaviour
     void Start()
     {
         currentLife = maxLife;
-        UpdateLifeUI();
+        Utility.UpdateLifeUI(currentLife, lifeIcons);
         LoadStageData();
         SetupGameUI();
         // ShowQuestion();
@@ -157,35 +157,10 @@ public class GameSceneManager : MonoBehaviour
         SceneManager.LoadScene("HigherStages");
     }
 
-    void UpdateLifeUI()
-    {
-        for (int i = 0; i < lifeIcons.Count; i++)
-        {
-            // i番目のアイコンを表示するかどうか判定
-            // 例：ライフが2なら、0番目と1番目は表示(true)、2番目は非表示(false)
-            if (i < currentLife)
-            {
-                lifeIcons[i].SetActive(true);
-            }
-            else
-            {
-                // 非表示にする際、DOTweenで少し演出を入れると豪華になります
-                if (lifeIcons[i].activeSelf)
-                {
-                    // 小さくなって消える演出（任意）
-                    lifeIcons[i].transform.DOScale(Vector3.zero, 0.3f).OnComplete(() =>
-                    {
-                        lifeIcons[i].SetActive(false);
-                    });
-                }
-            }
-        }
-    }
-    // CheckAnswerの中で不正解だった時に呼ぶ
     void Miss()
     {
         currentLife--;
-        UpdateLifeUI();
+        Utility.UpdateLifeUI(currentLife, lifeIcons);
         Debug.Log($"ミス！残りライフ: {currentLife}");
 
         AudioManager.instance.PlayMiss(AudioManager.instance.seMissSource.clip);
