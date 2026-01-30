@@ -51,7 +51,7 @@ public class GameSceneManager : MonoBehaviour
         currentLife = maxLife;
         Utility.UpdateLifeUI(currentLife, lifeIcons);
         LoadStageData();
-        SetupGameUI();
+        // SetupGameUI();
         // ShowQuestion();
     }
 
@@ -155,20 +155,6 @@ public class GameSceneManager : MonoBehaviour
     public void OnClickResultButton()
     {
         SceneManager.LoadScene("HigherStages");
-    }
-
-    void Miss()
-    {
-        currentLife--;
-        Utility.UpdateLifeUI(currentLife, lifeIcons);
-        Debug.Log($"ミス！残りライフ: {currentLife}");
-
-        AudioManager.instance.PlayMiss(AudioManager.instance.seMissSource.clip);
-
-        if (currentLife <= 0)
-        {
-            GameOver();
-        }
     }
 
     void GameOver()
@@ -312,7 +298,8 @@ public class GameSceneManager : MonoBehaviour
         }
         else
         {
-            Miss();
+            currentLife--;
+            Utility.Miss(currentLife, lifeIcons, GameOver);
         }
     }
 
@@ -330,6 +317,9 @@ public class GameSceneManager : MonoBehaviour
         PlayFabClientAPI.GetTitleData(request,
             result =>
             {
+                if (!this) return;
+                if (!gameObject.activeInHierarchy) return;
+
                 if (result.Data != null && result.Data.ContainsKey(key))
                 {
                     currentStage = JsonUtility.FromJson<StageInfo>(result.Data[key]);

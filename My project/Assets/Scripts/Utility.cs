@@ -30,4 +30,17 @@ public static class Utility
             }
         }
     }
+
+    public static void Miss(int currentLife, List<GameObject> lifeIcons, System.Action GameOver)
+    {
+        UpdateLifeUI(currentLife, lifeIcons);
+        Debug.Log($"ミス！残りライフ: {currentLife}");
+
+        AudioManager.instance.PlayMiss(AudioManager.instance.seMissSource.clip);
+
+        if (currentLife <= 0)
+        {
+            GameOver();
+        }
+    }
 }
