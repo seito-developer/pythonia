@@ -46,8 +46,17 @@ public class GameSceneManager : MonoBehaviour
     public GameObject textPartPrefab;       // テキスト用プレハブ
     public GameObject codePartPrefab;       // コード枠用プレハブ
 
+    [Header("Debug Settings")]
+    public bool isDebugMode = false; // インスペクターでチェックを入れるとデバッグモード
+    public TextAsset debugStageJson;  // インスペクターでデバッグ用JSONをセット
+
     void Start()
     {
+        if (!PlayFabClientAPI.IsClientLoggedIn())
+        {
+            isDebugMode = true;
+        }
+
         currentLife = maxLife;
         Utility.UpdateLifeUI(currentLife, lifeIcons);
         LoadStageData();
@@ -112,7 +121,7 @@ public class GameSceneManager : MonoBehaviour
             resultTitleText.color = Color.yellow;
             resultMessageText.text = "素晴らしい！正解です。";
 
-            AudioManager.instance.PlayResultSuccess(AudioManager.instance.seResultSuccessSource.clip);
+            AudioManager.instance?.PlayResultSuccess(AudioManager.instance.seResultSuccessSource?.clip);
         }
         else
         {
@@ -120,7 +129,7 @@ public class GameSceneManager : MonoBehaviour
             resultTitleText.color = Color.red;
             resultMessageText.text = "ライフがなくなってしまいました。";
 
-            AudioManager.instance.PlayResultFailure(AudioManager.instance.seResultFailureSource.clip);
+            AudioManager.instance?.PlayResultFailure(AudioManager.instance.seResultFailureSource?.clip);
         }
     }
 
@@ -191,7 +200,7 @@ public class GameSceneManager : MonoBehaviour
         if (questionPanel != null)
         {
             questionPanel.SetActive(false);
-            AudioManager.instance.PlayWindow(AudioManager.instance.seWindowSource.clip);
+            AudioManager.instance?.PlayWindow(AudioManager.instance.seWindowSource?.clip);
         }
     }
 
@@ -207,7 +216,7 @@ public class GameSceneManager : MonoBehaviour
         selectedPiece = piece;
         selectedPiece.SetHighlight(true);
 
-        AudioManager.instance.PlayPiece(AudioManager.instance.sePieceSource.clip);
+        AudioManager.instance?.PlayPiece(AudioManager.instance.sePieceSource?.clip);
         Debug.Log($"ピース {piece.pieceId} が選択されました");
     }
 
@@ -217,7 +226,7 @@ public class GameSceneManager : MonoBehaviour
         if (selectedPiece != null)
         {
             selectedPiece.IncreaseIndent();
-            AudioManager.instance.PlayIndent(AudioManager.instance.seIndentSource.clip);
+            AudioManager.instance?.PlayIndent(AudioManager.instance.seIndentSource?.clip);
         }
     }
 
@@ -226,7 +235,7 @@ public class GameSceneManager : MonoBehaviour
         if (selectedPiece != null)
         {
             selectedPiece.DecreaseIndent();
-            AudioManager.instance.PlayIndent(AudioManager.instance.seIndentSource.clip);
+            AudioManager.instance?.PlayIndent(AudioManager.instance.seIndentSource?.clip);
         }
     }
 
@@ -306,6 +315,17 @@ public class GameSceneManager : MonoBehaviour
     // 個別JSONファイルを読み込む処理
     void LoadStageData()
     {
+        // PlayFabにログインしていない、またはisDebugModeがオンの場合
+        if (isDebugMode || !PlayFab.PlayFabClientAPI.IsClientLoggedIn())
+        {
+            currentStage = GameDebugHelper.GetLocalDebugStage();
+            if (currentStage != null)
+            {
+                SetupGameUI();
+            }
+            return;
+        }
+
         int targetId = GameData.SelectedStageId;
         string key = $"Stage_{targetId}";
 

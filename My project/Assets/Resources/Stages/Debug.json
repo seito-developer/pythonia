@@ -2,9 +2,10 @@
   "id": 1,
   "stageName": "Hello World",
   "contents": [
-    { "type": "text", "value": "次のコードの誤りを探してください。" },
-    { "type": "code", "value": "int x = \"Hello\";" },
-    { "type": "image", "value": "hint_01" }
+    {
+      "type": "text",
+      "value": "コンソールに次のように表示させてください。\n\n\"Hello\nworld\n!!\""
+    }
   ],
   "handPieces": [
     { "id": 1, "code": "for item in list:" },

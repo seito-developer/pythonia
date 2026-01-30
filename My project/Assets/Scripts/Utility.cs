@@ -36,7 +36,7 @@ public static class Utility
         UpdateLifeUI(currentLife, lifeIcons);
         Debug.Log($"ミス！残りライフ: {currentLife}");
 
-        AudioManager.instance.PlayMiss(AudioManager.instance.seMissSource.clip);
+        AudioManager.instance?.PlayMiss(AudioManager.instance.seMissSource?.clip);
 
         if (currentLife <= 0)
         {
