@@ -19,12 +19,7 @@
     { "id": 1, "code": "for item in list:" },
     { "id": 2, "code": "list = [\"Hello\", \"world\", \"!!\"]" },
     { "id": 3, "code": "print(item)" },
-    { "id": 4, "code": "if len(list) > 0:" },
-    { "id": 5, "code": "x = 10" },
-    { "id": 6, "code": "y = True" },
-    { "id": 7, "code": "def foo_bar(args):" },
-    { "id": 8, "code": "return False" },
-    { "id": 9, "code": "while x > 0:" }
+    { "id": 4, "code": "if len(list) > 0:" }
   ],
   "correctPieces": [
     { "id": 2, "indent": 0 },
