@@ -1,0 +1,46 @@
+{
+    "contents": [
+        {
+            "type": "text",
+            "value": "変数 x が 10 より大きい場合にのみ、\"Big\" と表示させてください。\n(x = 15 とします)"
+        }
+    ],
+    "correctPieces": [
+        {
+            "id": 1,
+            "indent": 0
+        },
+        {
+            "id": 2,
+            "indent": 0
+        },
+        {
+            "id": 3,
+            "indent": 1
+        }
+    ],
+    "handPieces": [
+        {
+            "code": "x = 15",
+            "id": 1
+        },
+        {
+            "code": "if x > 10:",
+            "id": 2
+        },
+        {
+            "code": "print(\"Big\")",
+            "id": 3
+        },
+        {
+            "code": "else:",
+            "id": 4
+        },
+        {
+            "code": "print(\"Small\")",
+            "id": 5
+        }
+    ],
+    "id": 2,
+    "stageName": "数値の判定"
+}

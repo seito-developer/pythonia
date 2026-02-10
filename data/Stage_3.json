@@ -1,0 +1,54 @@
+{
+    "answer": {
+        "correctIds": [
+            10,
+            11,
+            12,
+            13
+        ],
+        "correctIndents": [
+            0,
+            0,
+            1,
+            0
+        ]
+    },
+    "contents": [
+        {
+            "type": "text",
+            "value": "次のコードの誤りを探してください。"
+        },
+        {
+            "type": "code",
+            "value": "int x = \"Hello\";"
+        },
+        {
+            "type": "text",
+            "value": "※テストテストテスト"
+        }
+    ],
+    "handPieces": [
+        {
+            "code": "total = 0",
+            "id": 10
+        },
+        {
+            "code": "for i in range(3):",
+            "id": 11
+        },
+        {
+            "code": "total += i",
+            "id": 12
+        },
+        {
+            "code": "print(total)",
+            "id": 13
+        },
+        {
+            "code": "while total < 3:",
+            "id": 14
+        }
+    ],
+    "id": 3,
+    "stageName": "合計を求めよう"
+}
