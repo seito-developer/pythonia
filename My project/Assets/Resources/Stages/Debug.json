@@ -4,31 +4,60 @@
   "contents": [
     {
       "type": "text",
-      "value": "次のコードの誤りを探してください。"
-    },
-    {
-      "type": "code",
-      "value": "int x = \"Hello\";"
+      "value": "目の前に、数字が書かれたカードが横一列に並んでいます。このカードはバラバラではなく、左から右へ小さい順にきれいに並べられています。このカードの列の中に、指定された「探したい数字」があるかどうかを調べてください。"
+    }, {
+      "type": "text",
+      "value": "1.もし見つかったら、「左から何番目にあったか」を教えてください。（※ただし、コンピュータの世界では一番左を「0番目」と数えます）\n2.もし見つからなかったら、「-1」と答えてください。"
     },
     {
       "type": "text",
-      "value": "※テストテストテスト"
+      "value": "端から1枚ずつめくって確認してはいけません（それは時間がかかりすぎます）。\n「真ん中を見て、探している数字より大きいか小さいかで、探す範囲を半分ずつに絞っていく」 という賢い方法を使って探してください。"
+    },
+    {
+      "type": "text",
+      "value": "例えば [-1, 0, 3, 5, 9, 12] から 9 を探す場合、まず中央の値を確認して 9 より小さいと分かれば左半分を全て候補から外し、残った右半分の中央を改めて確認することで 9 を特定し、その位置である「4」を答えとして導き出します。"
+    },
+    {
+      "type": "code",
+      "value": "//例1 \n入力: nums = [-1, 0, 3, 5, 9, 12], target = 9 \n出力: 4 \n説明: 9 は nums[4] にあるため、4 を返します。"
+    },
+    {
+      "type": "code",
+      "value": "//例2 \n入力: nums = [-1, 0, 3, 5, 9, 12], target = 2 \n出力: -1 \n説明: 2 は nums に存在しないため、-1 を返します。"
     }
   ],
   "handPieces": [
-    { "id": 1, "code": "for item in list:" },
-    { "id": 2, "code": "list = [\"Hello\", \"world\", \"!!\"]" },
-    { "id": 3, "code": "print(item)" },
+    { "id": 1, "code": "def search(nums: list[int], target: int) -> int:" },
+    { "id": 2, "code": "left, right = 0, len(nums) - 1" },
+    { "id": 3, "code": "while left <= right:" },
     { "id": 4, "code": "if len(list) > 0:" },
-    { "id": 5, "code": "x = 10" },
-    { "id": 6, "code": "y = True" },
-    { "id": 7, "code": "def foo_bar(args):" },
-    { "id": 8, "code": "return False" },
-    { "id": 9, "code": "while x > 0:" }
+    { "id": 5, "code": "mid = (left + right) // 2" },
+    { "id": 6, "code": "if nums[mid] == target:" },
+    { "id": 7, "code": "return mid" },
+    { "id": 8, "code": "elif nums[mid] < target:" },
+    { "id": 9, "code": "left = mid + 1" },
+    { "id": 10, "code": "else:" },
+    { "id": 11, "code": "right = mid - 1" },
+    { "id": 12, "code": "return -1" },
+    { "id": 4, "code": "mid = (left - right) // 2" },
+    { "id": 14, "code": "for i in range(10):" },
+    { "id": 15, "code": "if target in nums:" }
   ],
   "correctPieces": [
-    { "id": 2, "indent": 0 },
     { "id": 1, "indent": 0 },
-    { "id": 3, "indent": 1 }
+    { "id": 2, "indent": 1 },
+    { "id": 3, "indent": 1 },
+    { "id": 5, "indent": 2 },
+    { "id": 6, "indent": 2 },
+    { "id": 7, "indent": 3 },
+    { "id": 8, "indent": 2 },
+    { "id": 9, "indent": 3 },
+    { "id": 10, "indent": 2 },
+    { "id": 11, "indent": 3 },
+    { "id": 12, "indent": 1 }
+  ],
+  "hints": [
+    "ヒント1: まずは、コードの中で「真ん中」を見つける部分を探してみましょう。どのコード断片が「真ん中」を計算しているでしょうか？",
+    "ヒント2: 「真ん中」を見つけたら、次は「探している数字」と比較して、どのコード断片が「探している数字」と「真ん中の数字」を比較しているかを見つけましょう。"
   ]
 }
